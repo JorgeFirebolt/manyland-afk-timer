@@ -1,9 +1,12 @@
 const INITIAL_NAME_KEY = "elapsedPlayerOriginalName"
 let onMotionKey;
 
-async function main() {
-    await $.getScript("https://cdn.jsdelivr.net/gh/parseml/many-deobf@latest/deobf.js");
+function loadObf() {
+    if (typeof Deobfuscator === 'undefined')
+        return $.getScript("https://cdn.jsdelivr.net/gh/parseml/many-deobf@latest/deobf.js")
+}
 
+function main() {
     const initialName = localStorage.getItem(INITIAL_NAME_KEY);
     if (initialName !== null) {
         ig.game.player.changeName(initialName);
@@ -73,8 +76,8 @@ function getBack() {
     ig.game.player.keepEyesClosedDueToBoost = false;
 }
 
-!async function loader() {
-    let loading = setInterval(function () {
+!function loader() {
+    let loading = setInterval(async function () {
         if (typeof ig === "undefined")
             return
         if (typeof ig.game === "undefined")
@@ -85,6 +88,7 @@ function getBack() {
             return
 
         clearInterval(loading);
+        await loadObf();
         main();
     }, 250);
 }();
